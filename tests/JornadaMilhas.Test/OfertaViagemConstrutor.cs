@@ -2,10 +2,10 @@ using JornadaMilhasV1.Modelos;
 
 namespace JornadaMilhas.Test
 {
-    public class OfertaViagemTest
+    public class OfertaViagemConstrutor
     {
         [Fact]
-        public void TestandoOfertaValida()
+        public void RetornaOfertaValidaQuandoDadosValidos()
         {
             //padrão AAA
             //cenário - arrange
@@ -22,7 +22,7 @@ namespace JornadaMilhas.Test
         }
 
         [Fact]
-        public void TestandoOfertaComRotaNula()
+        public void RetornaMensagemDeErroDeRotaOuPeriodoInvalidosQuandoRotaNula()
         {
             Rota rota = null;
             Periodo periodo = new Periodo(new DateTime(2024, 2, 1), new DateTime(2024, 2, 5));
@@ -35,7 +35,7 @@ namespace JornadaMilhas.Test
         }
 
         [Fact]
-        public void TestandoOfertaComDataDeIdaMaiorQueVolta()
+        public void RetornaMensagemDeErroDeDataDeIdaInvalidaQuandoDataDeIdaMaiorQueVolta()
         {
             Rota rota = new Rota("SaoPaulo", "Salvador");
             Periodo periodo = new Periodo(new DateTime(2024, 6, 1), new DateTime(2024, 2, 5));
@@ -48,20 +48,7 @@ namespace JornadaMilhas.Test
         }
 
         [Fact]
-        public void TestandoOfertaSemPreco()
-        {
-            Rota rota = new Rota("SaoPaulo", "Salvador");
-            Periodo periodo = new Periodo(new DateTime(2024, 1, 1), new DateTime(2024, 2, 5));
-            double preco = 0;
-
-            OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
-
-            Assert.Contains("O preço da oferta de viagem deve ser maior que zero.", oferta.Erros.Sumario);
-            Assert.False(oferta.EhValido);
-        }
-
-        [Fact]
-        public void TestandoOfertaSemOrigem()
+        public void RetornaMensagemDeErroDeOrigemNulaOuVaziaQuandoOrigemNula()
         {
             Rota rota = new Rota(null, "Salvador");
             Periodo periodo = new Periodo(new DateTime(2024, 1, 1), new DateTime(2024, 2, 5));
@@ -70,6 +57,19 @@ namespace JornadaMilhas.Test
             OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
 
             Assert.Contains("A rota não pode possuir uma origem nula ou vazia.", oferta.Erros.Sumario);
+            Assert.False(oferta.EhValido);
+        }
+
+        [Fact]
+        public void RetornaMensagemDeErroDePrecoInvalidoQuandoPrecoNegativo()
+        {
+            Rota rota = new Rota("Sao Paulo", "Salvador");
+            Periodo periodo = new Periodo(new DateTime(2024, 1, 1), new DateTime(2024, 2, 5));
+            double preco = -100.00;
+
+            OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
+
+            Assert.Contains("O preço da oferta de viagem deve ser maior que zero.", oferta.Erros.Sumario);
             Assert.False(oferta.EhValido);
         }
     }
