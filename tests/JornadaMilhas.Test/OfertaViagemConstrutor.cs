@@ -65,12 +65,15 @@ namespace JornadaMilhas.Test
             Assert.False(oferta.EhValido);
         }
 
-        [Fact]
-        public void RetornaMensagemDeErroDePrecoInvalidoQuandoPrecoNegativo()
+        [Theory]
+        [InlineData("OrigemTeste", "DestinoTeste", "2024-02-01", "2024-02-05", -100)]
+        [InlineData("OrigemTeste", "DestinoTeste", "2024-02-01", "2024-02-05", 0)]
+        public void RetornaMensagemDeErroDePrecoInvalidoDeAcordoComDadosDeEntrada(string origem, string destino,
+                                                            string dataIda, string dataVolta,
+                                                            double preco)
         {
-            Rota rota = new Rota("Sao Paulo", "Salvador");
-            Periodo periodo = new Periodo(new DateTime(2024, 1, 1), new DateTime(2024, 2, 5));
-            double preco = -100.00;
+            Rota rota = new Rota(origem, destino);
+            Periodo periodo = new Periodo(DateTime.Parse(dataIda), DateTime.Parse(dataVolta));
 
             OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
 
