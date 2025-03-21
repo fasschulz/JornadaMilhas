@@ -38,4 +38,18 @@ public class OfertaViagemDesconto
 
         Assert.Equal(precoComDesconto, oferta.Preco, 0.001);
     }
+
+    [Fact]
+    public void RetornaPrecoOriginalQuandoValorDescontoNegativo()
+    {
+        Rota rota = new Rota("SaoPaulo", "Salvador");
+        Periodo periodo = new Periodo(new DateTime(2024, 2, 1), new DateTime(2024, 2, 5));
+        double precoOriginal = 100.00;
+        double desconto = -120.00;
+
+        OfertaViagem oferta = new OfertaViagem(rota, periodo, precoOriginal);
+        oferta.Desconto = desconto;
+
+        Assert.Equal(precoOriginal, oferta.Preco, 0.001);
+    }
 }
