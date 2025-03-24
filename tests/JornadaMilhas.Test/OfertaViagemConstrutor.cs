@@ -7,6 +7,7 @@ namespace JornadaMilhas.Test
         [Theory]
         [InlineData("", null, "2024-01-01", "2024-01-02", 0, false)]
         [InlineData("OrigemTeste", "DestinoTeste", "2024-02-01", "2024-02-05", 100, true)]
+        [InlineData("OrigemTeste", "DestinoTeste", "2024-02-01", "2024-02-01", 100, true)]
         [InlineData(null, "São Paulo", "2024-01-01", "2024-01-02", -1, false)]
         [InlineData("Vitória", "São Paulo", "2024-01-01", "2024-01-01", 0, false)]
         [InlineData("Rio de Janeiro", "São Paulo", "2024-01-01", "2024-01-02", -500, false)]
@@ -52,16 +53,33 @@ namespace JornadaMilhas.Test
             Assert.False(oferta.EhValido);
         }
 
-        [Fact]
-        public void RetornaMensagemDeErroDeOrigemNulaOuVaziaQuandoOrigemNula()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void RetornaMensagemDeErroDeOrigemNulaOuVaziaDeAcordoComDadosDeEntrada(string origem)
         {
-            Rota rota = new Rota(null, "Salvador");
+            Rota rota = new Rota(origem, "Salvador");
             Periodo periodo = new Periodo(new DateTime(2024, 1, 1), new DateTime(2024, 2, 5));
             double preco = 100.00;
 
             OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
 
             Assert.Contains("A rota não pode possuir uma origem nula ou vazia.", oferta.Erros.Sumario);
+            Assert.False(oferta.EhValido);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void RetornaMensagemDeErroDeDestinoNuloOuVazioDeAcordoComDadosDeEntrada(string destino)
+        {
+            Rota rota = new Rota("Sao Paulo", destino);
+            Periodo periodo = new Periodo(new DateTime(2024, 1, 1), new DateTime(2024, 2, 5));
+            double preco = 100.00;
+
+            OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
+
+            Assert.Contains("A rota não pode possuir um destino nulo ou vazio.", oferta.Erros.Sumario);
             Assert.False(oferta.EhValido);
         }
 
