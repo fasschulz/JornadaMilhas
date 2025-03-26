@@ -98,5 +98,35 @@ namespace JornadaMilhas.Test
             Assert.Contains("O preço da oferta de viagem deve ser maior que zero.", oferta.Erros.Sumario);
             Assert.False(oferta.EhValido);
         }
+
+        [Fact]        
+        public void RetornaMensagemDeErroDeOfertaInativaQuandoOfertaInativa()
+        {
+            Rota rota = new Rota("Sao Paulo", "Curitiba");
+            Periodo periodo = new Periodo(new DateTime(2024, 1, 1), new DateTime(2024, 2, 5));
+            double preco = 100.00;
+
+            OfertaViagem oferta = new OfertaViagem(rota, periodo, preco, false);
+
+            Assert.Contains("A oferta de viagem está inativa.", oferta.Erros.Sumario);
+            Assert.False(oferta.EhValido);
+        }
+
+        [Fact]
+        public void RetornaMensagemComADescricaoDaOfertaQuandoInvocadoToString()
+        {
+            Rota rota = new Rota("Sao Paulo", "Curitiba");
+            Periodo periodo = new Periodo(new DateTime(2024, 1, 1), new DateTime(2024, 2, 5));
+            double preco = 100.00;
+
+            OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
+            var descricaoOferta = $"Origem: {rota.Origem}, " +
+                $"Destino: {rota.Destino}, " +
+                $"Data de Ida: {periodo.DataInicial.ToShortDateString()}, " +
+                $"Data de Volta: {periodo.DataFinal.ToShortDateString()}, Preço: {preco:C}";
+
+            Assert.Contains(descricaoOferta, oferta.ToString());
+            Assert.True(oferta.EhValido);
+        }
     }
 }

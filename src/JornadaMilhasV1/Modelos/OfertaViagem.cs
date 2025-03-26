@@ -28,14 +28,15 @@ public class OfertaViagem: Valida
                 Preco -= desconto;
         }
     }
-    public bool Ativa { get; set; } = true;
+    public bool Ativa { get; set; }
 
 
-    public OfertaViagem(Rota rota, Periodo periodo, double preco)
+    public OfertaViagem(Rota rota, Periodo periodo, double preco, bool ativa = true)
     {
         Rota = rota;
         Periodo = periodo;       
         Preco = preco;
+        Ativa = ativa;
         Validar();
     }
 
@@ -46,6 +47,9 @@ public class OfertaViagem: Valida
 
     protected override void Validar()
     {
+        if(Ativa is false)
+            Erros.RegistrarErro("A oferta de viagem está inativa.");
+
         if (Rota == null || Periodo == null)
         {
             Erros.RegistrarErro("A oferta de viagem não possui rota ou período válidos.");
